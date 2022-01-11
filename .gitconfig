@@ -1,0 +1,30 @@
+[alias]
+    alias = ! git config --get-regexp ^alias\\. | sed -e s/^alias\\.// -e s/\\ /\\ =\\ /
+    br = branch
+    ca = commit --amend
+    ci = commit --verbose
+    co = checkout
+    cp = cherry-pick
+    di = diff
+    dt = difftool
+    lol = log --graph --branches --remotes --pretty=oneline --abbrev-commit
+    lsh = log --graph --branches --remotes --pretty=short --abbrev-commit
+    mg = merge
+    mt = mergetool
+    rb = rebase
+    rh = reset --hard
+    sh = show
+    st = status
+[core]
+    autocrlf = false
+    editor = vim
+    excludesfile = ~/.gitignore_global
+    fscache = true
+    preloadindex = true
+[color]
+    ui = true
+[remote "origin"]
+    fetch = +refs/heads/master:refs/remotes/origin/master
+[user]
+    name = Linus Ahlenius
+    email = Linus.Ahlenius@gmail.com
