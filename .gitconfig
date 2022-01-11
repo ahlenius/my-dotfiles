@@ -16,15 +16,20 @@
     sh = show
     st = status
 [core]
-    autocrlf = false
+    autocrlf = input
     editor = vim
     excludesfile = ~/.gitignore_global
     fscache = true
     preloadindex = true
 [color]
     ui = true
-[remote "origin"]
-    fetch = +refs/heads/master:refs/remotes/origin/master
 [user]
     name = Linus Ahlenius
     email = Linus.Ahlenius@gmail.com
+[filter "lfs"]
+    clean = git-lfs clean -- %f
+    smudge = git-lfs smudge -- %f
+    process = git-lfs filter-process
+    required = true
+[init]
+    defaultBranch = main
