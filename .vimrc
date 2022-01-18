@@ -4,76 +4,43 @@ filetype off                  " required
 " set the runtime path to include Vundle and initialize
 set rtp+=~/.vim/bundle/Vundle.vim
 call vundle#begin()
-	" alternatively, pass a path where Vundle should install plugins
-		"call vundle#begin('~/some/path/here')
-
-	" let Vundle manage Vundle, required
 	Plugin 'VundleVim/Vundle.vim'
-        Plugin 'elzr/vim-json'
-        Plugin 'junegunn/fzf'
-        Plugin 'junegunn/fzf.vim'
-        Plugin 'junegunn/vim-peekaboo'
-        Plugin 'scrooloose/nerdcommenter'
-        Plugin 'scrooloose/nerdtree'
-        Plugin 'tpope/vim-dispatch'
-        Plugin 'tpope/vim-fugitive'
-        Plugin 'tpope/vim-surround'
-        Plugin 'universal-ctags/ctags'
-        Plugin 'yegappan/mru'
-
-" TODO: Check what you want to keep
-"Plugin 'vim-pandoc/vim-pandoc'
-"Plugin 'vim-pandoc/vim-pandoc-syntax'
-"Plugin 'itchyny/lightline.vim'
-"Plugin 'terryma/vim-multiple-cursors'
-"Plugin 'tpope/vim-surround'
-"Plugin 'scrooloose/nerdtree'
-"Plugin 'ARM9/arm-syntax-vim'
-
-" All of your Plugins must be added before the following line
-call vundle#end()            " required
+    Plugin 'elzr/vim-json'
+    Plugin 'junegunn/fzf'
+    Plugin 'junegunn/fzf.vim'
+    Plugin 'junegunn/vim-peekaboo'
+    Plugin 'scrooloose/nerdcommenter'
+    Plugin 'scrooloose/nerdtree'
+    Plugin 'tpope/vim-dispatch'
+    Plugin 'tpope/vim-fugitive'
+    Plugin 'tpope/vim-surround'
+    Plugin 'yegappan/mru'
+call vundle#end()
 filetype plugin indent on    " required
-" To ignore plugin indent changes, instead use:
-"filetype plugin on
-"
-" Brief help
-" :PluginList       - lists configured plugins
-" :PluginInstall    - installs plugins; append `!` to update or just :PluginUpdate
-" :PluginSearch foo - searches for foo; append `!` to refresh local cache
-" :PluginClean      - confirms removal of unused plugins; append `!` to auto-approve removal
-"
-" see :h vundle for more details or wiki for FAQ
-" Put your non-Plugin stuff after this line
 
-filetype plugin indent on
+" set surround " tpope/vim-surround activation
+
+
 let mapleader=','
 set autoread
 set encoding=utf-8
 set history=10000
-set nobackup
-set nowritebackup
-set noswapfile
+set hid " Hide abandoned bugffers
 
 " itchyny/lightline.vim status bar, removes normal bar
 set laststatus=2
 set noshowmode
 
-" ARM9/arm-syntax-vim
-au BufNewFile,BufRead *.s,*.S set filetype=arm " arm = armv6/7
-
 " Key mappings
 map <C-n> :NERDTreeToggle<CR>
 
 " General settings
-set nu
-set rnu
-
-set cscopetag        " Use both cscope and ctag for 'ctrl-]', ':ta', and 'vim -t'
-set cscopetagorder=0 " Check cscope for definition of a symbol before ctags
-
+set number
+set relativenumber
 set csprg=/usr/bin/cscope
 set csto=0
 set cst
+set ruler
 
 "Set .req extension to .json
 autocmd BufNewFile,BufRead *.req set syntax=json
@@ -83,33 +50,30 @@ map <silent> gt <C-]>
 " Go To usage (cscope find)
 nmap gu :cs find d <C-R>=expand("<cword>")<CR><CR>
 
-" add cscope database on open
-:autocmd VimEnter * :cs add system("git rev-parse --show-toplevel")/.git/cscope.out
-
-
-
-let $FZF_DEFAULT_COMMAND= 'ag --ignore-dir=Run,*Mocks,Build2,ExtDeps -g ""'
-nmap <silent> <C-P> :call fzf#run({'source': 'ag --ignore=*.gcov* -g"" .', 'sink': 'e'})<CR>
-
 let NERDTreeQuitOnOpen=1
 
+" Movement with <Ctrl>hjkl in insert
+inoremap <A-h> <C-o>h
+inoremap <A-j> <C-o>j
+inoremap <A-k> <C-o>k
+inoremap <A-l> <C-o>l
 " search and replace
 set ignorecase    " Ignore case when searching
 set smartcase     " Override ignorecase if the pattern contains upper case
 set incsearch     " Make search act like search in modern browsers
 set magic         " Set magic on, for regular expressions
-set scrolloff=5   " Include lines for context of a find
+set scrolloff=7   " Include lines for context of a find
 
-set hlsearch
+set hlsearch      " Highlight search results
 
 " indentation
 set expandtab
-set shiftwidth=3
-set softtabstop=3
+set shiftwidth=4
+set softtabstop=4
 set tabstop=8
 set nowrap
 set linebreak
-set autoindent
+set autoindent   " Use smart indent?
 set cino=(0,Ws   " Align output after parantheses but not if ( is followed by whitespace
 
 " Find this C symbol
@@ -120,9 +84,16 @@ map <leader>f :NERDTreeFind<cr>
 " Replace inner word
 nmap S viw"_dP<esc>
 
-" Delete and keep the previous buffer content
+" Delete and keep the previous buffer content (No yanking)
 nnoremap <leader>d "_d
 vnoremap <leader>d "_d
+
+" replace currently selected text with default register without yanking it
+vnoremap <leader>p "_dP
+
+" Increment/Decrement next number is used for start/end of line in macOS
+nnoremap <leader>a <C-a>
+nnoremap <leader>x <C-x>
 
 " Remove trailing white space
 :command! WhitespaceCleanup %s/\s\+$//ge
@@ -150,5 +121,30 @@ vnoremap <leader>s "sy/<C-R>s<CR>
 " Copy file path to default register
 nnoremap <leader>cp :let @+=@%<cr>
 
-" Dispatch cscope update to .git
-nnoremap <leader>ccs :Dispatch! time cscope -R -b -q && mv cscope* $(git rev-parse --show-toplevel)/.git/<CR>
+" Sudo save :W
+command! W execute 'w !sudo tee % > /dev/null' <bar> edit!
+
+" Show matching brackets when text indicator is over them
+set showmatch
+
+" How many tenths of a second to blink when matching brackets
+set mat=2
+
+" Use spaces instead of tabs
+set expandtab
+
+" Be smart when using tabs, duh
+set smarttab
+
+" Visual mode pressing * or # searches for the current selection
+vnoremap <silent> * :<C-u>call VisualSelection('', '')<CR>/<C-R>=@/<CR><CR>
+vnoremap <silent> # :<C-u>call VisualSelection('', '')<CR>?<C-R>=@/<CR><CR>
+
+" Delete trailing white space on save, useful for some filetypes ;)
+fun! CleanExtraSpaces()
+    let save_cursor = getpos(".")
+    let old_query = getreg('/')
+    silent! %s/\s\+$//e
+    call setpos('.', save_cursor)
+    call setreg('/', old_query)
+endfun
