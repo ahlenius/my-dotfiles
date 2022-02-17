@@ -25,7 +25,7 @@ let mapleader=','
 set autoread
 set encoding=utf-8
 set history=10000
-set hid " Hide abandoned bugffers
+set hid " Hide abandoned buffers
 
 " itchyny/lightline.vim status bar, removes normal bar
 set laststatus=2
@@ -148,3 +148,4 @@ fun! CleanExtraSpaces()
     call setpos('.', save_cursor)
     call setreg('/', old_query)
 endfun
+

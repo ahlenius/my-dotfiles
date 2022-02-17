@@ -1,5 +1,6 @@
 venv
 .idea/
 CMakeLists.txt
+.DS_Store
 .clang-format
 .myconfig
